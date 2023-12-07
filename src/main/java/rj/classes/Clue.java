@@ -1,61 +1,53 @@
 package rj.classes;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import rj.daoes.ClueDao;
+
+import java.sql.Date;
 import java.time.LocalDate;
 
 //线索类
 public class Clue {
-	private static int nextId  = 0;
-	private final int id;
-	private final String name;
-	private Project project;	
-	//设置为public，方便测试的时候修改日期时间。
-	public String lastDevelop;
-	public LocalDate lastDevelopDate;
-	public LocalDate putDate;
-	
-	public Clue(String name) {
-		this.id = nextId++;
-		this.name = name;
-		this.lastDevelopDate = LocalDate.now();
-		this.putDate = LocalDate.now();
-		System.out.println(name + "线索创建"); 
-		
-	};
-	
+	private int id;
+	private String name;
+	private  int projectId;
+	private String lastDevelop;
+	private Date lastDevelopDate;
+	private Date putDate;
+
 	public int getId(){
 		return id;
 	};
-	
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getName(){
 		return name;
 	};
-	
-	public void createProject(){
-		System.out.println(this.name + "线索尝试建立项目");
-		if(this.project == null){
-			this.project = new Project(name);
-		}else{
-			System.out.println(this.name + "线索已创建项目，不可以重复创建"); 
-		};
+	public void  setName(String name) {
+		this.name = name;
 	}
-
-	public Project getProject(){
-		return project;
+	public int getProjectId() {
+		return projectId;
 	}
-	
-	public void removeProject(){
-		if(this.project == null){
-			System.out.println(this.name + "线索已无项目，不可以删除"); 
-		}else{
-			this.project.over();
-			this.project = null;
-		};
+	public void setProjectId(int projectId) {
+		this.projectId = projectId;
 	}
-//	设置线索最后一个开发，和捡出的时间
-	public void setLastDevelop(String name){
-		lastDevelop = name;
-		lastDevelopDate = LocalDate.now();
-		
+	public String getLastDevelop() {
+		return lastDevelop;
 	}
-
+	public void setLastDevelop(String lastDevelop) {
+		this.lastDevelop = lastDevelop;
+	}
+	public Date getLastDevelopDate() {
+		return lastDevelopDate;
+	}
+	public void setLastDevelopDate(Date lastDevelopDate) {this.lastDevelopDate = lastDevelopDate; }
+	public Date getPutDate() {
+		return putDate;
+	}
+	public void setPutDate(Date putDate) {
+		this.putDate = putDate;
+	}
 
 }

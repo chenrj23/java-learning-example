@@ -1,61 +1,65 @@
 package rj;
-import rj.classes.*;  
-import java.time.LocalDate;
+
+
+import rj.classes.*;
+import rj.controllers.*;
+import java.sql.Date;
 
 public class Main {
    public static void main(String[] args) {
-		OpenSeaSingleton openSea = OpenSeaSingleton.getInstance();
-		System.out.println("公海初始化"); 
-		
-		//创建四个线索
-		Clue myFirstClue = new Clue("上海顾村公园");
-		Clue mySecondClue = new Clue("上海虹桥机场");
-		Clue myThirdClue = new Clue("浙江绍兴");
-		Clue myFourthClue = new Clue("南京雨花台");
-		
-		//第一个线索的最后开发在私海的时间为11月1日，开发为张三
-		myFirstClue.lastDevelopDate = LocalDate.parse("2023-11-01");
-		myFirstClue.lastDevelop = "张三";
-		System.out.println("上海顾村公园线索 调整最后开发为张三，最后私海持有线索为11月1日"); 
-		
-		
-		//线索放入公海
-		System.out.println("在线索放入公海前，公海线索有共"+openSea.clueNumber()+"条");
-		openSea.put(myFirstClue);
-		openSea.put(mySecondClue);
-		openSea.put(myThirdClue);
-		openSea.put(myFourthClue);
-		System.out.println("所有线索放入公海，公海线索有共"+openSea.clueNumber()+"条");
+	   //创建四个线索
+	   Clue clue1 = ClueManager.createClue("上海虹桥机场");
+	   Clue clue2 = ClueManager.createClue("浙江绍兴");
+	   Clue clue3 = ClueManager.createClue("南京雨花台");
+	   Clue clue4 = ClueManager.createClue("北京长城");
 
-		//创建两个开发
-		Develop myFirstDevelop = new Develop("张三");
-		Develop mySecondDevelop = new Develop("李四");
+	   //第三个线索的最后开发在私海的时间为11月1日，开发为张三
+	   clue3.setLastDevelopDate(Date.valueOf("2023-12-01"));
+	   clue3.setLastDevelop("张三");
+	   ClueManager.updateClue(clue3);
 
-		//张三捡入三个线索
-		myFirstDevelop.putClue(myFirstClue);
-		myFirstDevelop.putClue(mySecondClue);
-		myFirstDevelop.putClue(myThirdClue);
-		System.out.println("张三尝试捡入三个线索后，公海线索有"+openSea.clueNumber()+"条");
-	    System.out.println("张三尝试捡入三个线索后，私海线索有"+myFirstDevelop.getPrivateSea().clueNumber()+"条");
-		
-		//从线索创建项目
-		myFirstClue.createProject();
-		mySecondClue.createProject();
-		//同一个线索不能重复创建项目
-		myFirstClue.createProject();
+	   //线索放入公海
+	   System.out.println("在线索放入公海前，公海线索有共" + OpenSeaSingletonManager.getAllCluesId().size() + "条");
+	   OpenSeaSingletonManager.put(clue1);
+	   OpenSeaSingletonManager.put(clue2);
+	   OpenSeaSingletonManager.put(clue3);
+	   OpenSeaSingletonManager.put(clue4);
+	   System.out.println("所有线索放入公海，公海线索有共" + OpenSeaSingletonManager.getAllCluesId().size() + "条");
 
+	   //创建两个开发
+	   Develop myFirstDevelop = DevelopManger.createDevelop("张三");
+	   Develop mySecondDevelop = DevelopManger.createDevelop("李四");
 
-		//张三废弃项目
-		myFirstDevelop.removeClue(mySecondClue);
-	    System.out.println("公海线索有"+openSea.clueNumber()+"条");
-	    System.out.println("张三的私海线索有"+myFirstDevelop.getPrivateSea().clueNumber()+"条");
+	   //张三捡入四个线索
+	   System.out.println("张三尝试捡入四个线索前，公海线索有" + OpenSeaSingletonManager.getAllCluesId().size() + "条");
+	   DevelopManger.putClue(myFirstDevelop,clue1);
+	   DevelopManger.putClue(myFirstDevelop,clue2);
+	   DevelopManger.putClue(myFirstDevelop,clue3);
+	   DevelopManger.putClue(myFirstDevelop,clue4);
+	   System.out.println("张三尝试捡入四个线索后，公海线索有" + OpenSeaSingletonManager.getAllCluesId().size() + "条");
 
-	    myFirstDevelop.putClue(myFourthClue);
-	    myFourthClue.putDate = LocalDate.parse("2023-01-01");
-	    System.out.println("南京雨花台 调整开始持有线索为01月1日");
-	    System.out.println("进行180天检查");
-	    System.out.println("张三的私海线索有"+myFirstDevelop.getPrivateSea().clueNumber()+"条");
-		myFirstDevelop.checkState();
-	    System.out.println("张三的私海线索有"+myFirstDevelop.getPrivateSea().clueNumber()+"条");
+	   //从线索创建项目
+	   ProjectManger.createProject(clue1);
+	   ProjectManger.createProject(clue2);
+	   //同一个线索不能重复创建项目
+	   ProjectManger.createProject(clue1);
+
+	   //张三废弃项目
+	   DevelopManger.removeClue(myFirstDevelop,clue2);
+	   System.out.println("公海线索有" + OpenSeaSingletonManager.getAllCluesId().size() + "条");
+	   System.out.println("张三的私海线索有" + PrivateSeaManager.getCluesId(myFirstDevelop).size() + "条");
+
+	   DevelopManger.putClue(myFirstDevelop,clue1);
+	   clue1.setPutDate(Date.valueOf("2023-01-01"));
+	   clue4.setPutDate(Date.valueOf("2023-01-01"));
+	   ClueManager.updateClue(clue1);
+	   ClueManager.updateClue(clue4);
+	   System.out.println("上海虹桥机场 北京长城 调整开始持有线索为01月1日");
+	   System.out.println("进行180天检查");
+	   System.out.println("张三的私海线索有"+PrivateSeaManager.getCluesId(myFirstDevelop).size()+"条");
+		   System.out.println("张三的私海线索有"+PrivateSeaManager.getCluesId(myFirstDevelop));
+	   DevelopManger.checkState(myFirstDevelop);
+	   System.out.println("张三的私海线索有"+PrivateSeaManager.getCluesId(myFirstDevelop).size()+"条");
    }
 }
+
