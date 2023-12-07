@@ -40,11 +40,22 @@
 		<artifactId>spring-context</artifactId>
 		<version>5.3.9</version> <!-- 替换为你想要的版本 -->
 	</dependency>
-      <dependency>
-          <groupId>org.aspectj</groupId>
-          <artifactId>aspectjweaver</artifactId>
-          <version>1.9.20</version>
-      </dependency>
+	<dependency>
+	  <groupId>org.aspectj</groupId>
+	  <artifactId>aspectjweaver</artifactId>
+	  <version>1.9.20</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.logging.log4j</groupId>
+		<artifactId>log4j-api</artifactId>
+		<version>2.17.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.logging.log4j</groupId>
+		<artifactId>log4j-core</artifactId>
+		<version>2.17.0</version>
+	</dependency>
+
   </dependencies>
 
   <build>
@@ -114,4 +125,6 @@
       </plugins>
     </pluginManagement>
   </build>
+  
 </project>
+

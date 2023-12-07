@@ -1,12 +1,13 @@
 package rj;
 
-
 import rj.classes.*;
 import rj.controllers.*;
 import java.sql.Date;
+import org.jfaster.mango.util.logging.MangoLogger;
 
 public class Main {
    public static void main(String[] args) {
+	   MangoLogger.useLog4J2Logger();
 	   //创建四个线索
 	   Clue clue1 = ClueManager.createClue("上海虹桥机场");
 	   Clue clue2 = ClueManager.createClue("浙江绍兴");
