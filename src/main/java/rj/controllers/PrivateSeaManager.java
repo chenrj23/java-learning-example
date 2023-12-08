@@ -1,6 +1,8 @@
 package rj.controllers;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.jfaster.mango.jdbc.exception.DuplicateKeyException;
@@ -11,6 +13,7 @@ import rj.daoes.OpenSeaSingletonDao;
 import rj.daoes.PrivateSeaDao;
 
 public class PrivateSeaManager {
+    private static final Logger logger = LogManager.getLogger(PrivateSeaManager.class);
     private static final String configLocation = "applicationContext-simple.xml";
     private static final ApplicationContext ctx = new ClassPathXmlApplicationContext(configLocation);
     private static final PrivateSeaDao privateSeaDao = ctx.getBean(PrivateSeaDao.class);
@@ -21,8 +24,8 @@ public class PrivateSeaManager {
             openSeaSingletonDao.deleteOpenSea(clue);
         }
         catch (DuplicateKeyException e){
-            System.out.println("DuplicateKeyException" + e.getMessage());
-            System.out.println(develop.getName() + "尝试捡入" + clue.getName() + "线索失败");
+            logger.info("DuplicateKeyException" + e.getMessage());
+            logger.info(develop.getName() + "尝试捡入" + clue.getName() + "线索失败");
         }
     }
     public static List<Integer> getCluesId(Develop develop){

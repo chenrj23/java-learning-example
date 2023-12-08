@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="INFO">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}  [%t] %-5level  %logger{36} %marker - %msg%n"/>
+<!--            <Filters>-->
+<!--                &lt;!&ndash; 只有指定的 Marker 存在时才输出日志 &ndash;&gt;-->
+<!--                <MarkerFilter marker="流程模拟信息" onMatch="ACCEPT" onMismatch="DENY"/>-->
+<!--                &lt;!&ndash; 只有指定级别的日志才输出到 Console &ndash;&gt;-->
+<!--                <ThresholdFilter  level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>-->
+<!--            </Filters>-->
         </Console>
+        <File name="File" fileName="logs/application.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} -` %msg%n"/>
+        </File>
     </Appenders>
     <Loggers>
         <Logger name="org.jfaster.mango" level="debug" additivity="false">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
         </Logger>
-        <Root level="error">
+        <Root level="INFO">
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>

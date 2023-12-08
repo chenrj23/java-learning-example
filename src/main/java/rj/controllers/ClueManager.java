@@ -1,5 +1,7 @@
 package rj.controllers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import rj.classes.Clue;
@@ -11,6 +13,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 public class ClueManager {
+    private static final Logger logger = LogManager.getLogger(ClueManager.class);
     private static final String configLocation = "applicationContext-simple.xml";
     private static final ApplicationContext ctx = new ClassPathXmlApplicationContext(configLocation);
     private static final ClueDao clueDao = ctx.getBean(ClueDao.class);
@@ -23,7 +26,7 @@ public class ClueManager {
         myClue.setLastDevelopDate(currentDate);
         myClue.setPutDate(currentDate);
         myClue.setId(clueDao.insertClue(myClue.getName(), myClue.getLastDevelopDate(), myClue.getPutDate()));
-        System.out.println(name + "线索创建");
+        logger.info(name + "线索创建");
         return myClue;
     }
     public static Clue getClueById (int id){

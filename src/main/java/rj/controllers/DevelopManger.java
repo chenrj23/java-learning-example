@@ -1,5 +1,7 @@
 package rj.controllers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jfaster.mango.jdbc.exception.DuplicateKeyException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -14,6 +16,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class DevelopManger {
+    private static final Logger logger = LogManager.getLogger(DevelopManger.class);
     private static final String configLocation = "applicationContext-simple.xml";
     private static final ApplicationContext ctx = new ClassPathXmlApplicationContext(configLocation);
     private static final DevelopDao developDao = ctx.getBean(DevelopDao.class);
@@ -22,12 +25,12 @@ public class DevelopManger {
         Develop myDevelop = new Develop();
         myDevelop.setName(name);
         myDevelop.setId(developDao.insertDevelop(myDevelop));
-        System.out.println(name + "开发 id" + myDevelop.getId() + "被创建");
+        logger.info(name + "开发 id" + myDevelop.getId() + "被创建");
         return myDevelop;
     }
 
     public static void putClue(Develop develop, Clue clue) {
-        System.out.println(develop.getName() + "尝试捡入" + clue.getName() + "线索");
+        logger.info(develop.getName() + "尝试捡入" + clue.getName() + "线索");
         if (clue.getLastDevelopDate() == null) {
                 PrivateSeaManager.put(develop, clue);
         } else {
@@ -37,7 +40,7 @@ public class DevelopManger {
             boolean developAreEqual = Objects.equals(clue.getLastDevelop(), develop.getName());
             //开发15天内不能重复捡入线索，需要等15天
             if (developAreEqual && daysDifference < 15) {
-                System.out.println(clue.getName() + "线索距离" + develop.getName() + "BD上次掉出线索差 " + daysDifference + "天，无法捡入");
+                logger.info(clue.getName() + "线索距离" + develop.getName() + "BD上次掉出线索差 " + daysDifference + "天，无法捡入");
             } else {
                 PrivateSeaManager.put(develop, clue);
             }
@@ -45,7 +48,7 @@ public class DevelopManger {
     }
 
     public static void removeClue(Develop develop, Clue clue) {
-        System.out.println(develop.getName() + "开发捡出" + clue.getName() + "线索");
+        logger.info(develop.getName() + "开发捡出" + clue.getName() + "线索");
         PrivateSeaManager.deleteClue(develop, clue);
         clue.setLastDevelop(develop.getName());
         LocalDate currentLocalDate = LocalDate.now();
@@ -60,16 +63,16 @@ public class DevelopManger {
             LocalDate putLocalDate = clue.getPutDate().toLocalDate();
             long daysDifference = ChronoUnit.DAYS.between(putLocalDate, nowLocalDate);
             if (daysDifference >= 180) {
-                System.out.println(clue.getName() + "线索距离BD捡入满 " + daysDifference + "天");
+                logger.info(clue.getName() + "线索距离BD捡入满 " + daysDifference + "天");
                 Project clueProject = ClueManager.getProject(clue);
                 if (clueProject == null) {
-                    System.out.println(clue.getName() + "线索BD未签约，捡出至公海");
+                    logger.info(clue.getName() + "线索BD未签约，捡出至公海");
                     DevelopManger.removeClue(develop, clue);
                 } else {
                     boolean operateStateAreEquals = Objects.equals(clueProject.getOperateState(),"待筹开");
                     boolean projectStateAreEquals = Objects.equals(clueProject.getProjectState(),"评审中");
                     if (operateStateAreEquals && projectStateAreEquals) {
-                        System.out.println(clueProject + "项目超期未推进，，捡出至公海");
+                        logger.info(clueProject + "项目超期未推进，，捡出至公海");
                         DevelopManger.removeClue(develop, clue);
                     } else {
                         return;
@@ -78,7 +81,7 @@ public class DevelopManger {
                 }
                 ;
             } else {
-                System.out.println(clue.getName() + "线索距离BD捡入不满180天，已捡入 " + daysDifference + "天");
+                logger.info(clue.getName() + "线索距离BD捡入不满180天，已捡入 " + daysDifference + "天");
             }
         }
     }

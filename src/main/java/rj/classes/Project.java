@@ -7,8 +7,7 @@ public class Project {
 	private String operateState = "待筹开";
 	public Project(){}
 	public Project(String name){
-		setName(name);
-		System.out.println(name+ "项目建立成功");
+		this.name = name;
 	}
     public int getId() {
         return id;
